@@ -4,6 +4,7 @@ import React from 'react';
 import Tags from './Tags';
 import agent from '../../agent';
 import { connect, useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import {
   HOME_PAGE_LOADED,
   HOME_PAGE_UNLOADED,
@@ -13,6 +14,9 @@ import {
 const Promise = global.Promise;
 
 const Home = (props) => {
+  const location = useLocation();
+
+  console.log("location", location.state)
   const dispatch = useDispatch()
   const { common, home } = useSelector(state => state);
 

@@ -1,5 +1,6 @@
 import ListErrors from './ListErrors';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import agent from '../agent';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import {
@@ -12,8 +13,8 @@ import {
 } from '../constants/actionTypes';
 
 const Editor = (props) => {
-
   const dispatch = useDispatch();
+  const params = useParams();
   const editorState = useSelector(state => state.editor);
 
   const updateFieldEvent = (key) => (e) => dispatch({ type: UPDATE_FIELD_EDITOR, key, value: e.target.value })
@@ -51,19 +52,18 @@ const Editor = (props) => {
     dispatch({ type: ARTICLE_SUBMITTED, payload: promise })
   };
 
-  console.log("match", props.match.params.slug);
 
   React.useEffect(() => {
-    if (props.match.params.slug) {
-      dispatch({ type: EDITOR_PAGE_LOADED, payload: agent.Articles.get(props.match.params.slug) })
+    if (params.slug) {
+      dispatch({ type: EDITOR_PAGE_LOADED, payload: agent.Articles.get(params.slug) })
       // dispatch({ type: EDITOR_PAGE_UNLOADED });
     }
-  }, [props.match.params.slug])
+  }, [params.slug])
 
 
   React.useEffect(() => {
-    if (props.match.params.slug) {
-      dispatch({ type: EDITOR_PAGE_LOADED, payload: agent.Articles.get(props.match.params.slug) })
+    if (params.slug) {
+      dispatch({ type: EDITOR_PAGE_LOADED, payload: agent.Articles.get(params.slug) })
     }
     return () => {
       dispatch({ type: EDITOR_PAGE_UNLOADED })

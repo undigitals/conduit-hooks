@@ -3,7 +3,7 @@ import Header from './Header';
 import React from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { APP_LOAD, REDIRECT } from '../constants/actionTypes';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Article from '../components/Article';
 import Editor from '../components/Editor';
 import Home from '../components/Home';
@@ -12,11 +12,10 @@ import Profile from '../components/Profile';
 import ProfileFavorites from '../components/ProfileFavorites';
 import Register from '../components/Register';
 import Settings from '../components/Settings';
-import { store } from '../store';
-import { push } from 'react-router-redux';
 
 const App = (props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const commonState = useSelector(state => {
     return state.common
   });
@@ -30,10 +29,10 @@ const App = (props) => {
   }, [])
 
   React.useEffect(() => {
+    console.log(props)
     if (commonState.redirectTo) {
-      // dispatch(commonState.redirectTo);
-      // store.dispatch(commonState.redirectTo)
-      props.history.push(commonState.redirectTo)
+      // props.history.push(commonState.redirectTo)
+      navigate(commonState.redirectTo)
       dispatch({ type: REDIRECT });
     }
   }, [commonState.redirectTo])
@@ -44,17 +43,17 @@ const App = (props) => {
         <Header
           appName={commonState.appName}
           currentUser={commonState.currentUser} />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/editor/:slug" component={Editor} />
-          <Route path="/editor" component={Editor} />
-          <Route path="/article/:id" component={Article} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/@:username/favorites" component={ProfileFavorites} />
-          <Route path="/@:username" component={Profile} />
-        </Switch>
+        <Routes>
+          <Route index path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/editor/:slug" element={<Editor />} />
+          <Route path="/editor" element={<Editor />} />
+          <Route path="/article/:id" element={<Article />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/@:username/favorites" element={<ProfileFavorites />} />
+          <Route path="/@:username" element={<Profile />} />
+        </Routes>
       </div>
     );
   }

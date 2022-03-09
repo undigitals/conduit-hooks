@@ -1,9 +1,8 @@
 import ArticleList from './ArticleList';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import agent from '../agent';
 import { connect, useDispatch, useSelector } from 'react-redux';
-import queryString from 'query-string';
 import {
   FOLLOW_USER,
   UNFOLLOW_USER,
@@ -80,6 +79,8 @@ const Tabs = (props) => {
 
 const Profile = (props) => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const params = useParams();
   const { articleList: globalArticleList, common: globalCommon, profile: globalProfile } = useSelector(state => state);
 
   const onFollow = (username) => {
@@ -99,8 +100,8 @@ const Profile = (props) => {
   React.useEffect(() => {
     dispatch({
       type: PROFILE_PAGE_LOADED, payload: Promise.all([
-        agent.Profile.get(props.match.params.username),
-        agent.Articles.byAuthor(props.match.params.username)
+        agent.Profile.get(params.username),
+        agent.Articles.byAuthor(params.username)
       ])
     })
 
@@ -118,7 +119,10 @@ const Profile = (props) => {
 
   const isUser = globalCommon.currentUser && globalProfile.username === globalCommon.currentUser.username;
 
-  const isFavorite = props.location.pathname.split("/").includes("favorites");
+  console.log("locaton", location)
+  console.log("params", params)
+
+  const isFavorite = location.pathname.split("/").includes("favorites");
 
   return (
     <div className="profile-page">
